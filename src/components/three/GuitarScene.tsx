@@ -1,7 +1,8 @@
 "use client";
 
-import { Suspense, useCallback, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
+import { TOUCH } from "three";
 import {
   AdaptiveDpr,
   ContactShadows,
@@ -37,6 +38,33 @@ function SceneLoader() {
   );
 }
 
+/**
+ * OrbitControls forces `touch-action: none` on the canvas, which blocks touch
+ * scrolling at the CSS layer regardless of the `touches` mapping. Restore
+ * vertical panning so one finger still scrolls the page.
+ */
+function RestoreTouchScroll() {
+  const gl = useThree((state) => state.gl);
+
+  useEffect(() => {
+    const el = gl.domElement;
+    const apply = () => {
+      if (el.style.touchAction !== "pan-y") el.style.touchAction = "pan-y";
+    };
+
+    apply();
+
+    // OrbitControls re-asserts `touch-action: none` whenever it reconnects,
+    // so watch the attribute rather than setting it once on mount.
+    const observer = new MutationObserver(apply);
+    observer.observe(el, { attributes: true, attributeFilter: ["style"] });
+
+    return () => observer.disconnect();
+  }, [gl]);
+
+  return null;
+}
+
 type GuitarSceneProps = {
   /** Hero scroll progress in [0, 1], updated imperatively by the parent. */
   progressRef: React.RefObject<number>;
@@ -54,7 +82,7 @@ export function GuitarScene({ progressRef }: GuitarSceneProps) {
       <Canvas
         shadows
         dpr={[1, 2]}
-        camera={{ position: [0, -0.15, 2.4], fov: 35, near: 0.05, far: 50 }}
+        camera={{ position: [0, -0.15, 3.1], fov: 35, near: 0.05, far: 50 }}
         gl={{ antialias: true, powerPreference: "high-performance" }}
       >
         <color attach="background" args={["#dfe9e4"]} />
@@ -124,17 +152,20 @@ export function GuitarScene({ progressRef }: GuitarSceneProps) {
           makeDefault
           target={[0, -0.22, 0]}
           enablePan={false}
-          enableZoom
-          minDistance={1.2}
-          maxDistance={4.5}
+          // Wheel events must reach the page: the hero scroll drives the
+          // camera, so trapping them here would block scrolling entirely.
+          enableZoom={false}
           minPolarAngle={Math.PI * 0.12}
           maxPolarAngle={Math.PI * 0.88}
           rotateSpeed={0.6}
-          zoomSpeed={0.6}
           dampingFactor={0.08}
+          // One finger scrolls the page; two fingers rotate the instrument.
+          touches={{ ONE: undefined, TWO: TOUCH.DOLLY_ROTATE }}
           onStart={handleStart}
           onEnd={handleEnd}
         />
+
+        <RestoreTouchScroll />
 
         <AdaptiveDpr pixelated />
       </Canvas>

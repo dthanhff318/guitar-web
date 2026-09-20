@@ -73,7 +73,7 @@ export function Hero() {
       {/* The viewport-height stage stays pinned while the 200vh section scrolls. */}
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Nudge the whole canvas down so the instrument clears the copy. */}
-        <div className="absolute inset-0 translate-y-12">
+        <div className="absolute inset-0 translate-y-40 md:translate-y-48">
           <SceneErrorBoundary>
             <GuitarScene progressRef={scrollProgress} />
           </SceneErrorBoundary>
@@ -82,9 +82,9 @@ export function Hero() {
         {/* Oversized watermark behind the instrument. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-[46%] z-0 select-none text-center"
+          className="pointer-events-none absolute inset-x-0 top-[62%] z-0 select-none text-center"
         >
-          <span className="font-display text-[22vw] font-bold uppercase leading-none tracking-tight text-white/45">
+          <span className="font-display text-[18vw] font-bold uppercase leading-none tracking-tight text-white/45">
             Trung Hieu
           </span>
         </div>
@@ -94,65 +94,71 @@ export function Hero() {
         {/* Headline sits above the instrument. */}
         <div
           ref={copyRef}
-          className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center px-6 pt-28 text-center md:pt-32"
+          className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center px-6 pt-24 text-center md:pt-28"
         >
+          <p
+            data-hero-reveal
+            className="rounded-full bg-ember-600 px-5 py-1.5 font-display text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-white"
+          >
+            Tuyển sinh 2026
+          </p>
+
           <h1
             data-hero-reveal
-            className="max-w-3xl font-display text-4xl font-bold leading-[1.08] tracking-tight text-bone sm:text-5xl md:text-6xl"
+            className="mt-6 max-w-3xl font-display text-3xl font-bold uppercase leading-[1.12] tracking-tight text-bone sm:text-4xl md:text-5xl"
           >
-            Cây đàn huyền thoại,
+            Học thử miễn phí cùng giáo viên
             <br />
-            dành cho người chơi thật sự.
+            Học viện Âm nhạc Quốc gia
           </h1>
+
+          <ul
+            data-hero-reveal
+            className="mt-7 grid w-full max-w-2xl gap-3 text-left sm:grid-cols-2"
+          >
+            <li className="rounded-2xl border border-smoke bg-white/70 p-4 backdrop-blur-sm">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.16em] text-bone">
+                Khóa 30 buổi
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                Tặng 01 đàn trị giá{" "}
+                <span className="font-semibold text-ember-600">
+                  1.150.000&nbsp;VNĐ
+                </span>
+              </p>
+            </li>
+
+            <li className="rounded-2xl border border-smoke bg-white/70 p-4 backdrop-blur-sm">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.16em] text-bone">
+                Khóa 30 buổi · 1 kèm 1
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                Tặng 01 đàn trị giá{" "}
+                <span className="font-semibold text-ember-600">
+                  2.250.000&nbsp;VNĐ
+                </span>
+              </p>
+            </li>
+          </ul>
 
           <p
             data-hero-reveal
-            className="mt-6 max-w-md text-balance text-sm leading-relaxed text-muted sm:text-base"
+            className="mt-5 font-display text-xs uppercase tracking-[0.22em] text-muted"
           >
-            Guitar điện, acoustic và phụ kiện chính hãng. Thử đàn trực tiếp tại
-            cửa hàng, bảo hành 12 tháng, giao hàng toàn quốc.
+            Guitar cổ điển · Guitar solo · Guitar đệm hát
           </p>
 
           <div
             data-hero-reveal
-            className="pointer-events-auto mt-8 flex flex-wrap items-center justify-center gap-3"
+            className="pointer-events-auto mt-7 flex flex-wrap items-center justify-center gap-3"
           >
             <a
               href="#reserve"
-              className="rounded-full bg-bone px-7 py-3 font-display text-xs font-semibold uppercase tracking-[0.2em] text-void transition hover:bg-ember-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-600"
+              className="rounded-full bg-bone px-8 py-3.5 font-display text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-ember-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-600"
             >
-              Liên hệ tư vấn
-            </a>
-            <a
-              href="#specs"
-              className="rounded-full border border-smoke bg-white/60 px-7 py-3 font-display text-xs font-semibold uppercase tracking-[0.2em] text-bone transition hover:border-ember-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-600"
-            >
-              Xem sản phẩm
+              Đăng ký ngay
             </a>
           </div>
-        </div>
-
-        {/* "NEW!" marker, echoing the reference layout. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-[46%] top-[40%] z-10 hidden -rotate-6 md:block"
-        >
-          <span className="font-display text-lg font-bold uppercase tracking-wide text-ember-500">
-            New!
-          </span>
-          <svg
-            className="mx-auto mt-1 w-4 text-ember-500"
-            viewBox="0 0 20 28"
-            fill="none"
-          >
-            <path
-              d="M10 2V24M10 24L3 17M10 24L17 17"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
         </div>
 
         {/* Interaction hint, bottom-left. */}

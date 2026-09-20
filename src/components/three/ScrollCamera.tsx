@@ -12,9 +12,9 @@ import * as THREE from "three";
 const FOCUS = new THREE.Vector3(0, -0.22, 0);
 
 const KEYFRAMES: { at: number; position: [number, number, number] }[] = [
-  { at: 0, position: [0, -0.15, 2.4] },
-  { at: 0.5, position: [1.3, 0.5, 1.9] },
-  { at: 1, position: [0.3, -0.5, 1.5] },
+  { at: 0, position: [0, -0.15, 3.1] },
+  { at: 0.5, position: [1.5, 0.5, 2.6] },
+  { at: 1, position: [0.4, -0.5, 2.2] },
 ];
 
 type ScrollCameraProps = {

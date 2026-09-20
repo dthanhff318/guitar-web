@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Oswald } from "next/font/google";
 import "./globals.css";
 
+import { SiteNav } from "@/components/ui/SiteNav";
+
 const sans = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -38,7 +40,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="vi" className={`${sans.variable} ${display.variable} h-full`}>
-      <body className="min-h-full bg-void text-bone">{children}</body>
+      <body className="min-h-full bg-void text-bone">
+        <SiteNav />
+        {children}
+      </body>
     </html>
   );
 }
