@@ -6,14 +6,13 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 export const metadata: Metadata = {
   title: "Sản phẩm | Trung tâm Guitar Trung Hiếu",
   description:
-    "Guitar classic, acoustic, guitar điện và phụ kiện chính hãng tại Trung tâm Guitar Trung Hiếu.",
+    "Guitar classic, acoustic và phụ kiện chính hãng tại Trung tâm Guitar Trung Hiếu.",
 };
 
 // TODO: replace with the centre's real catalogue (name, price, photo).
 const PRODUCTS = [
-  { name: "Guitar classic", note: "Đàn tập cho người mới bắt đầu" },
+  { name: "Guitar classic", note: "Cổ điển, dây nylon — đàn tập cho người mới" },
   { name: "Guitar acoustic", note: "Đệm hát, thùng gỗ nguyên tấm" },
-  { name: "Guitar điện", note: "Solo, luyện kỹ thuật nâng cao" },
   { name: "Phụ kiện", note: "Bao đàn, capo, dây, pick, máy lên dây" },
 ];
 
@@ -32,7 +31,7 @@ export default function ProductsPage() {
           mục tiêu học. Liên hệ hotline để được báo giá chi tiết.
         </p>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {PRODUCTS.map((product) => (
             <article
               key={product.name}

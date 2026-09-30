@@ -20,11 +20,11 @@ const display = Oswald({
 export const metadata: Metadata = {
   title: "Trung Hieu Guitar Center",
   description:
-    "Chuyên guitar điện, acoustic và phụ kiện chính hãng. Xem đàn ở chế độ 3D: xoay, phóng to và khám phá từng chi tiết.",
+    "Chuyên guitar acoustic, classic và phụ kiện chính hãng. Xem đàn ở chế độ 3D: xoay, phóng to và khám phá từng chi tiết.",
   openGraph: {
     title: "Trung Hieu Guitar Center",
     description:
-      "Chuyên guitar điện, acoustic và phụ kiện chính hãng. Xem đàn ở chế độ 3D.",
+      "Chuyên guitar acoustic, classic và phụ kiện chính hãng. Xem đàn ở chế độ 3D.",
     type: "website",
     locale: "vi_VN",
   },
