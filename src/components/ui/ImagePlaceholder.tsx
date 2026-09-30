@@ -6,8 +6,8 @@ type ImagePlaceholderProps = {
 };
 
 /**
- * Stand-in for photography that has not been supplied yet. Swap the whole
- * component for `next/image` once files land in `public/images/`.
+ * Stand-in for photography that has not been supplied yet. Swap it for
+ * `Photo` once a real file lands in `public/image/`.
  */
 export function ImagePlaceholder({
   label,

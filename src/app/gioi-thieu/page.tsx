@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { Photo } from "@/components/ui/Photo";
 import { Contact } from "@/components/sections/Contact";
 
 export const metadata: Metadata = {
@@ -35,7 +36,11 @@ export default function AboutPage() {
           </p>
         </div>
 
-        <ImagePlaceholder label="Ảnh không gian trung tâm / lớp học" />
+        <Photo
+          src="/image/teaching2.jpeg"
+          alt="Lớp guitar tại trung tâm: các học viên ngồi tập đàn cùng giáo viên, tường treo đàn classic và acoustic."
+          priority
+        />
 
         <Section title="Học guitar theo lộ trình phù hợp">
           <p>
@@ -56,7 +61,10 @@ export default function AboutPage() {
           </p>
         </Section>
 
-        <ImagePlaceholder label="Ảnh giáo viên hướng dẫn học viên" />
+        <Photo
+          src="/image/teaching.jpeg"
+          alt="Giáo viên hướng dẫn trực tiếp một học viên đang tập bấm hợp âm theo bản nhạc trên giá."
+        />
 
         <Section title="Đội ngũ giáo viên">
           <p>
