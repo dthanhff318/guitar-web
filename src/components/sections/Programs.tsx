@@ -51,17 +51,32 @@ export function Programs() {
 
   useGSAP(
     () => {
-      gsap.from("[data-program-reveal]", {
-        y: 32,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
-        },
-      });
+      // One trigger per element rather than a single section-wide one: the
+      // hero above is a 200vh sticky stage, so a tween keyed to the section
+      // top fires while the lower cards are still below the fold and can
+      // leave them stranded at opacity 0 - which reads as blank space.
+      const targets = gsap.utils.toArray<HTMLElement>("[data-program-reveal]");
+
+      for (const target of targets) {
+        gsap.from(target, {
+          y: 32,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: target,
+            start: "top 88%",
+            // The sticky hero changes this section's offset as it resolves,
+            // so positions must be recomputed on refresh.
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
+      // Fonts and the hero's 3D canvas settle after this effect runs, and both
+      // shift the trigger offsets. Recompute once the layout is stable so no
+      // card is left stranded mid-tween.
+      ScrollTrigger.refresh();
     },
     { scope: sectionRef },
   );

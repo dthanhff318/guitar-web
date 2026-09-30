@@ -13,6 +13,12 @@ import { MODEL_URL, dressMaterials, normaliseModel } from "@/lib/model";
  */
 const REST_TILT = Math.PI * 0.42;
 
+/** Pitch about X that rakes the soundboard toward the camera. */
+const FACE_PITCH = THREE.MathUtils.degToRad(-40);
+
+/** Yaw about Y that turns the face round rather than leaving it edge-on. */
+const FACE_YAW = THREE.MathUtils.degToRad(-70);
+
 /** Peak sway either side of the resting pose (~7°). */
 const SWAY_AMPLITUDE = THREE.MathUtils.degToRad(7);
 
@@ -51,10 +57,11 @@ export function GuitarModel({ sway = true }: GuitarModelProps) {
     if (!group) return;
 
     // Ease the sway out rather than snapping to zero when the user grabs it.
-    const target = sway && !reduceMotion
-      ? Math.sin((state.clock.elapsedTime / SWAY_PERIOD) * Math.PI * 2) *
-        SWAY_AMPLITUDE
-      : 0;
+    const target =
+      sway && !reduceMotion
+        ? Math.sin((state.clock.elapsedTime / SWAY_PERIOD) * Math.PI * 2) *
+          SWAY_AMPLITUDE
+        : 0;
 
     // Rock around Z so the instrument tips like a pendulum, rather than
     // turning away from the camera as a Y-axis spin would.
@@ -66,9 +73,9 @@ export function GuitarModel({ sway = true }: GuitarModelProps) {
        idle motion never fights the tilt. */
     <group rotation={[0, 0, REST_TILT]}>
       <group ref={swayRef}>
-        {/* Stand the guitar upright (the source lies along +Z) and turn the
-            soundboard toward the camera rather than away from it. */}
-        <group rotation={[Math.PI / 2, 0, 0]}>
+        {/* Pitch back then yaw round so the soundboard presents to the
+            camera rather than edge-on. */}
+        <group rotation={[FACE_PITCH, FACE_YAW, 0]}>
           <primitive object={normalised} />
         </group>
       </group>

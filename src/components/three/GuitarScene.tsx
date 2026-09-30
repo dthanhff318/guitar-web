@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { TOUCH } from "three";
 import {
@@ -39,15 +39,19 @@ function SceneLoader() {
 }
 
 /**
- * OrbitControls forces `touch-action: none` on the canvas, which blocks touch
- * scrolling at the CSS layer regardless of the `touches` mapping. Restore
- * vertical panning so one finger still scrolls the page.
+ * OrbitControls forces `touch-action: none` on its event target, which blocks
+ * touch scrolling at the CSS layer regardless of the `touches` mapping.
+ * Restore vertical panning so one finger still scrolls the page.
  */
 function RestoreTouchScroll() {
   const gl = useThree((state) => state.gl);
+  const eventSource = useThree((state) => state.events.connected);
 
   useEffect(() => {
-    const el = gl.domElement;
+    // Controls bind to the event source when one is set, so patch that
+    // element rather than the canvas it would otherwise use.
+    const el: HTMLElement =
+      eventSource instanceof HTMLElement ? eventSource : gl.domElement;
     const apply = () => {
       if (el.style.touchAction !== "pan-y") el.style.touchAction = "pan-y";
     };
@@ -60,7 +64,7 @@ function RestoreTouchScroll() {
     observer.observe(el, { attributes: true, attributeFilter: ["style"] });
 
     return () => observer.disconnect();
-  }, [gl]);
+  }, [gl, eventSource]);
 
   return null;
 }
@@ -72,18 +76,24 @@ type GuitarSceneProps = {
 
 export function GuitarScene({ progressRef }: GuitarSceneProps) {
   const [isDragging, setIsDragging] = useState(false);
+  const grabRef = useRef<HTMLDivElement>(null);
 
   // Any manual orbit hands control to the user until they release.
   const handleStart = useCallback(() => setIsDragging(true), []);
   const handleEnd = useCallback(() => setIsDragging(false), []);
 
   return (
-    <div className="absolute inset-0">
+    /* The canvas fills the hero so the scene stays uncropped, but it must not
+       swallow gestures across the whole viewport: `pointer-events-none` here
+       lets touches fall through to the page, and the grab pad below re-enables
+       them over the instrument alone. */
+    <div className="pointer-events-none absolute inset-0">
       <Canvas
         shadows
         dpr={[1, 2]}
         camera={{ position: [0, -0.15, 3.1], fov: 35, near: 0.05, far: 50 }}
         gl={{ antialias: true, powerPreference: "high-performance" }}
+        eventSource={grabRef as React.RefObject<HTMLElement>}
       >
         <color attach="background" args={["#dfe9e4"]} />
         <fog attach="fog" args={["#dfe9e4", 4, 12]} />
@@ -159,8 +169,10 @@ export function GuitarScene({ progressRef }: GuitarSceneProps) {
           maxPolarAngle={Math.PI * 0.88}
           rotateSpeed={0.6}
           dampingFactor={0.08}
-          // One finger scrolls the page; two fingers rotate the instrument.
-          touches={{ ONE: undefined, TWO: TOUCH.DOLLY_ROTATE }}
+          // One finger must scroll the page. `undefined` is read as "unset"
+          // and falls back to ROTATE, so map it to PAN, which `enablePan`
+          // above already disables - that makes one finger a true no-op.
+          touches={{ ONE: TOUCH.PAN, TWO: TOUCH.DOLLY_ROTATE }}
           onStart={handleStart}
           onEnd={handleEnd}
         />
@@ -169,6 +181,16 @@ export function GuitarScene({ progressRef }: GuitarSceneProps) {
 
         <AdaptiveDpr pixelated />
       </Canvas>
+
+      {/* Pointer target for OrbitControls: a band over the instrument rather
+          than the full hero, so taps and swipes elsewhere scroll normally.
+          `touch-action: pan-y` keeps one-finger vertical scrolling even here. */}
+      <div
+        ref={grabRef}
+        aria-hidden
+        className="pointer-events-auto absolute left-1/2 top-1/2 h-[46%] w-[72%] max-w-md -translate-x-1/2 -translate-y-1/2 md:h-[56%] md:w-[52%]"
+        style={{ touchAction: "pan-y" }}
+      />
 
       <SceneLoader />
     </div>
