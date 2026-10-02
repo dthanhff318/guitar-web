@@ -5,7 +5,8 @@ export const CONTACT = {
   /** `tel:` needs the digits unspaced. */
   phoneHref: "tel:0989975848",
   tagline: "Guitar từ cơ bản đến nâng cao · Luyện thi các trường Năng khiếu",
-  // TODO: point these at the centre's real Facebook page and Zalo OA.
-  facebook: "https://www.facebook.com/",
+  facebook: "https://www.facebook.com/profile.php?id=61578349237340",
   zalo: "https://zalo.me/0989975848",
+  /** Where registration enquiries are delivered. */
+  inbox: "letrunghieutq111@gmail.com",
 } as const;
