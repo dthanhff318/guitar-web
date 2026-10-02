@@ -8,6 +8,7 @@ import { useGSAP } from "@gsap/react";
 
 import { SceneErrorBoundary } from "@/components/three/SceneErrorBoundary";
 import { Doodles } from "@/components/ui/Doodles";
+import { RegisterButton } from "@/components/ui/RegisterButton";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -152,12 +153,9 @@ export function Hero() {
             data-hero-reveal
             className="pointer-events-auto mt-7 flex flex-wrap items-center justify-center gap-3"
           >
-            <a
-              href="#reserve"
-              className="rounded-full bg-bone px-8 py-3.5 font-display text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-ember-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-600"
-            >
+            <RegisterButton className="rounded-full bg-bone px-8 py-3.5 font-display text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-ember-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-600">
               Đăng ký ngay
-            </a>
+            </RegisterButton>
           </div>
         </div>
 

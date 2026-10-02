@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+import { RegisterButton } from "./RegisterButton";
+
 const TABS = [
   { href: "/", label: "Trang chủ" },
   { href: "/gioi-thieu", label: "Giới thiệu" },
@@ -49,12 +51,9 @@ export function SiteNav() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/tuyen-sinh"
-            className="hidden rounded-full bg-bone px-5 py-2 font-display text-[0.7rem] uppercase tracking-[0.2em] text-white transition hover:bg-ember-600 sm:block"
-          >
+          <RegisterButton className="hidden rounded-full bg-bone px-5 py-2 font-display text-[0.7rem] uppercase tracking-[0.2em] text-white transition hover:bg-ember-600 sm:block">
             Đăng ký
-          </Link>
+          </RegisterButton>
 
           <button
             type="button"
@@ -90,6 +89,13 @@ export function SiteNav() {
                 {tab.label}
               </Link>
             ))}
+
+            <RegisterButton
+              onOpen={() => setOpen(false)}
+              className="mt-4 rounded-full bg-bone px-5 py-3 font-display text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-ember-600 sm:hidden"
+            >
+              Đăng ký học
+            </RegisterButton>
           </div>
         </div>
       ) : null}
