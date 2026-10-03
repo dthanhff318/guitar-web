@@ -1,5 +1,5 @@
 import { CONTACT } from "@/lib/site";
-import { validateRegistration } from "@/lib/registration";
+import { normalisePhone, validateRegistration } from "@/lib/registration";
 
 /**
  * Resend's shared sender works without owning a domain, but it can only
@@ -28,8 +28,11 @@ export async function POST(request: Request) {
     return Response.json({ error: "Dữ liệu không hợp lệ." }, { status: 400 });
   }
 
-  const { email, note } = (payload ?? {}) as Record<string, unknown>;
+  const { name, phone, email, note } = (payload ?? {}) as Record<string, unknown>;
   const input = {
+    name: typeof name === "string" ? name.trim() : "",
+    // Store the dialable form, not whatever spacing the visitor typed.
+    phone: typeof phone === "string" ? normalisePhone(phone) : "",
     email: typeof email === "string" ? email.trim() : "",
     note: typeof note === "string" ? note.trim() : "",
   };
@@ -65,9 +68,11 @@ export async function POST(request: Request) {
         to: [CONTACT.inbox],
         // Lets the centre hit "Reply" and land in the student's inbox.
         reply_to: input.email,
-        subject: `Đăng ký học guitar — ${input.email}`,
+        subject: `Đăng ký học guitar — ${input.name} (${input.phone})`,
         html: `
           <h2>Đăng ký học mới</h2>
+          <p><strong>Họ tên:</strong> ${escapeHtml(input.name)}</p>
+          <p><strong>Điện thoại:</strong> <a href="tel:${escapeHtml(input.phone)}">${escapeHtml(input.phone)}</a></p>
           <p><strong>Email:</strong> ${escapeHtml(input.email)}</p>
           <p><strong>Ghi chú:</strong><br>${noteHtml}</p>
           <hr>

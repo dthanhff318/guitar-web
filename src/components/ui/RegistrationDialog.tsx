@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 
 import { CONTACT } from "@/lib/site";
 import {
+  NAME_MAX_LENGTH,
   NOTE_MAX_LENGTH,
   validateRegistration,
   type RegistrationErrors,
@@ -13,16 +14,20 @@ import {
 type Status = "idle" | "sending" | "sent";
 
 export function RegistrationDialog({ onClose }: { onClose: () => void }) {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [note, setNote] = useState("");
   const [errors, setErrors] = useState<RegistrationErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
 
+  const nameId = useId();
+  const phoneId = useId();
   const emailId = useId();
   const noteId = useId();
   const titleId = useId();
-  const emailRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
 
   // The trigger can live inside a flex/transformed ancestor, which would
   // otherwise size and clip this fixed overlay. Portal to body to escape it.
@@ -32,7 +37,7 @@ export function RegistrationDialog({ onClose }: { onClose: () => void }) {
   // Focus the first field, and close on Escape from anywhere in the dialog.
   // Gated on `mounted`: before the portal renders there is no input to focus.
   useEffect(() => {
-    if (mounted) emailRef.current?.focus();
+    if (mounted) nameRef.current?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -54,7 +59,7 @@ export function RegistrationDialog({ onClose }: { onClose: () => void }) {
     event.preventDefault();
     setFormError(null);
 
-    const found = validateRegistration({ email, note });
+    const found = validateRegistration({ name, phone, email, note });
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 
@@ -63,7 +68,7 @@ export function RegistrationDialog({ onClose }: { onClose: () => void }) {
       const response = await fetch("/api/dang-ky", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, note }),
+        body: JSON.stringify({ name, phone, email, note }),
       });
       const data = await response.json().catch(() => ({}));
 
@@ -163,10 +168,67 @@ export function RegistrationDialog({ onClose }: { onClose: () => void }) {
               Đăng ký học thử
             </h2>
             <p className="mt-2.5 text-sm leading-relaxed text-muted">
-              Để lại email, trung tâm sẽ liên hệ tư vấn lớp phù hợp.
+              Để lại thông tin, trung tâm sẽ liên hệ tư vấn lớp phù hợp.
             </p>
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
+              <div>
+                <label
+                  htmlFor={nameId}
+                  className="font-display text-[0.68rem] uppercase tracking-[0.18em] text-bone"
+                >
+                  Họ tên <span className="text-ember-600">*</span>
+                </label>
+                <input
+                  ref={nameRef}
+                  id={nameId}
+                  type="text"
+                  value={name}
+                  maxLength={NAME_MAX_LENGTH}
+                  autoComplete="name"
+                  onChange={(event) => setName(event.target.value)}
+                  aria-invalid={Boolean(errors.name)}
+                  aria-describedby={errors.name ? `${nameId}-error` : undefined}
+                  placeholder="Nguyễn Văn A"
+                  className={`mt-2 w-full rounded-xl border bg-ash px-4 py-3 text-sm text-bone outline-none transition placeholder:text-muted/60 focus:border-ember-500 focus:bg-coal ${
+                    errors.name ? "border-red-500" : "border-smoke"
+                  }`}
+                />
+                {errors.name ? (
+                  <p id={`${nameId}-error`} className="mt-1.5 text-xs text-red-600">
+                    {errors.name}
+                  </p>
+                ) : null}
+              </div>
+
+              <div>
+                <label
+                  htmlFor={phoneId}
+                  className="font-display text-[0.68rem] uppercase tracking-[0.18em] text-bone"
+                >
+                  Số điện thoại <span className="text-ember-600">*</span>
+                </label>
+                <input
+                  id={phoneId}
+                  type="tel"
+                  inputMode="tel"
+                  value={phone}
+                  autoComplete="tel"
+                  onChange={(event) => setPhone(event.target.value)}
+                  aria-invalid={Boolean(errors.phone)}
+                  aria-describedby={errors.phone ? `${phoneId}-error` : undefined}
+                  placeholder="0912 345 678"
+                  className={`mt-2 w-full rounded-xl border bg-ash px-4 py-3 text-sm text-bone outline-none transition placeholder:text-muted/60 focus:border-ember-500 focus:bg-coal ${
+                    errors.phone ? "border-red-500" : "border-smoke"
+                  }`}
+                />
+                {errors.phone ? (
+                  <p id={`${phoneId}-error`} className="mt-1.5 text-xs text-red-600">
+                    {errors.phone}
+                  </p>
+                ) : null}
+              </div>
+
               <div>
                 <label
                   htmlFor={emailId}
@@ -175,9 +237,9 @@ export function RegistrationDialog({ onClose }: { onClose: () => void }) {
                   Email <span className="text-ember-600">*</span>
                 </label>
                 <input
-                  ref={emailRef}
                   id={emailId}
                   type="email"
+                  autoComplete="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   aria-invalid={Boolean(errors.email)}
