@@ -8,5 +8,5 @@ export const CONTACT = {
   facebook: "https://www.facebook.com/profile.php?id=61578349237340",
   zalo: "https://zalo.me/0989975848",
   /** Where registration enquiries are delivered. */
-  inbox: "letrunghieutq111@gmail.com",
+  inbox: "dinhthiminhhang2412@gmail.com",
 } as const;
